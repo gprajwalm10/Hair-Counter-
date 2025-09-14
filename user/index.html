@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hair Analysis - Professional Hair Health Assessment</title>
+    <link rel="stylesheet" href="style.css">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' http://localhost:3000; font-src 'self' https://r2cdn.perplexity.ai; script-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+</head>
+<body data-color-scheme="light">
+    <div class="container" id="mainContainer">
+        <header class="header">
+            <div class="header-content">
+                <h1>AI Hair Analysis</h1>
+                <p>Professional computer vision technology for comprehensive hair health assessment</p>
+                <div class="medical-badge">
+                    <span class="badge-icon">🏥</span>
+                    <span>Medical-Grade Analysis</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <!-- Upload/Camera Section -->
+            <section class="capture-section" id="captureSection">
+                <div class="capture-options">
+                    <div class="option-card" id="cameraOption">
+                        <div class="option-icon">📷</div>
+                        <h3>Take Live Photo</h3>
+                        <p>Use your camera for real-time analysis</p>
+                        <button class="btn btn--primary" id="startCameraBtn">Start Camera</button>
+                    </div>
+                    
+                    <div class="option-separator">
+                        <span>OR</span>
+                    </div>
+                    
+                    <div class="option-card" id="uploadOption">
+                        <div class="option-icon">📁</div>
+                        <h3>Upload Photo</h3>
+                        <p>Choose an existing photo from your device</p>
+                        <div class="upload-area" id="uploadArea">
+                            <div class="upload-content">
+                                <p>Click to browse or drag and drop</p>
+                                <p class="file-types">JPG, PNG, WEBP (Max: 10MB)</p>
+                            </div>
+                            <input type="file" id="imageInput" accept="image/*" hidden>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="photo-tips">
+                    <h4>📋 Tips for Best Results</h4>
+                    <ul>
+                        <li>Ensure good lighting on your scalp</li>
+                        <li>Position camera directly above your head</li>
+                        <li>Remove any hats or hair accessories</li>
+                        <li>Keep hair clean and dry for accurate analysis</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Camera Section -->
+            <section class="camera-section hidden" id="cameraSection">
+                <div class="camera-container">
+                    <div class="camera-header">
+                        <h3>Position Your Head</h3>
+                        <p>Align your head within the circle for optimal analysis</p>
+                    </div>
+                    
+                    <div class="camera-preview">
+                        <video id="cameraVideo" autoplay muted playsinline></video>
+                        <div class="camera-overlay">
+                            <div class="guide-circle"></div>
+                            <div class="guide-text">Position head here</div>
+                        </div>
+                    </div>
+                    
+                    <div class="camera-controls">
+                        <button class="btn btn--outline" id="cancelCameraBtn">Cancel</button>
+                        <button class="btn btn--primary camera-capture-btn" id="captureBtn">
+                            <span class="capture-icon">📸</span>
+                            Capture Photo
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="camera-permission-error hidden" id="cameraError">
+                    <div class="error-content">
+                        <div class="error-icon">⚠️</div>
+                        <h3>Camera Access Required</h3>
+                        <p>Please allow camera access to take a photo for analysis.</p>
+                        <button class="btn btn--outline" id="retryCamera">Try Again</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Processing Section -->
+            <section class="processing-section hidden" id="processingSection">
+                <div class="processing-container">
+                    <div class="image-preview">
+                        <canvas id="imageCanvas"></canvas>
+                        <div class="processing-overlay" id="processingOverlay">
+                            <div class="processing-spinner"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="processing-info">
+                        <h3>Analyzing Your Hair Health</h3>
+                        <p class="processing-description" id="processingDescription">Our AI is examining your hair patterns, density, and overall condition...</p>
+                        
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <div class="progress-text" id="progressText">Initializing analysis...</div>
+                        </div>
+                        
+                        <div class="processing-steps" id="processingSteps">
+                            <div class="step" id="step1">📊 Initializing computer vision algorithms</div>
+                            <div class="step" id="step2">🔍 Preprocessing image data</div>
+                            <div class="step" id="step3">🎯 Detecting hair follicle patterns</div>
+                            <div class="step" id="step4">🧮 Analyzing hair strand thickness</div>
+                            <div class="step" id="step5">📈 Calculating spatial hair density</div>
+                            <div class="step" id="step6">✨ Finalizing analysis results</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section hidden" id="resultsSection">
+                <div class="results-header">
+                    <h2>Your Hair Analysis Report</h2>
+                    <p class="report-date" id="reportDate"></p>
+                </div>
+                
+                <div class="results-grid">
+                    <div class="result-card primary-result">
+                        <div class="result-icon">🔬</div>
+                        <h3>Hair Count</h3>
+                        <div class="hair-count" id="hairCount">Calculating...</div>
+                        <div class="confidence">
+                            Confidence: <span id="confidenceScore">--</span>
+                        </div>
+                    </div>
+                    
+                    <div class="result-card">
+                        <div class="result-icon">📊</div>
+                        <h3>Analysis Details</h3>
+                        <div class="detail-list">
+                            <div class="detail-item">
+                                <span>Processing Time:</span>
+                                <span id="processingTime">--</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>Image Quality:</span>
+                                <span id="imageQuality">--</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>Hair Density:</span>
+                                <span id="hairDensity">--</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>Algorithm:</span>
+                                <span>CV-2024 v2.1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recommendations Section -->
+                <div class="recommendation-section" id="recommendationSection">
+                    <div class="recommendation-card">
+                        <div class="recommendation-header">
+                            <div class="recommendation-icon" id="recommendationIcon">✅</div>
+                            <div class="recommendation-title">
+                                <h3 id="recommendationTitle">Hair Health Assessment</h3>
+                                <div class="health-status" id="healthStatus"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="recommendation-content">
+                            <p id="recommendationMessage">Analysis complete!</p>
+                            
+                            <div class="recommendation-tips">
+                                <h4>📝 Recommended Actions:</h4>
+                                <ul id="recommendationTips">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="btn btn--primary" id="newAnalysisBtn">New Analysis</button>
+                    <button class="btn btn--outline" id="downloadReportBtn">Download Report</button>
+                </div>
+            </section>
+        </div>
+
+        <!-- Medical Disclaimer -->
+        <section class="disclaimer-section">
+            <div class="disclaimer-card">
+                <div class="disclaimer-header">
+                    <span class="disclaimer-icon">⚕️</span>
+                    <h3>Medical Disclaimer</h3>
+                </div>
+                <div class="disclaimer-content">
+                    <p>This AI hair analysis tool provides educational information and estimates based on computer vision technology. Results are not intended as medical diagnosis or treatment advice.</p>
+                    <p><strong>For medical concerns about hair loss or scalp conditions, please consult a qualified dermatologist or healthcare professional.</strong></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Hidden Admin Interface -->
+    <div class="admin-container hidden" id="adminContainer">
+        <header class="admin-header">
+            <h1>Hair Analysis Admin Control</h1>
+            <p>Control hair analysis results from any device</p>
+        </header>
+
+        <div class="admin-content">
+            <div class="admin-status">
+                <div class="status-card">
+                    <h3>System Status</h3>
+                    <div class="status-indicator" id="adminStatus">Waiting for analysis...</div>
+                    <p class="status-time" id="statusTime">--</p>
+                </div>
+            </div>
+
+            <div class="admin-image-section" id="adminImageSection">
+                <h3>Current Analysis Image</h3>
+                <div class="admin-image-preview">
+                    <canvas id="adminImageCanvas"></canvas>
+                </div>
+            </div>
+
+            <div class="admin-controls" id="adminControls">
+                <h3>Set Analysis Results</h3>
+                
+                <div class="form-group">
+                    <label class="form-label" for="adminHairCount">Hair Count</label>
+                    <input type="number" class="form-control" id="adminHairCount" min="20000" max="180000" value="85000">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="adminConfidence">Confidence (%)</label>
+                    <input type="number" class="form-control" id="adminConfidence" min="60" max="95" value="87">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="adminCategory">Hair Health Category</label>
+                    <select class="form-control" id="adminCategory">
+                        <option value="low">Low Hair Density (needs attention)</option>
+                        <option value="medium" selected>Moderate Hair Density (take action)</option>
+                        <option value="good">Good Hair Health (maintain routine)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="adminImageQuality">Image Quality</label>
+                    <select class="form-control" id="adminImageQuality">
+                        <option value="Poor">Poor</option>
+                        <option value="Fair">Fair</option>
+                        <option value="Good" selected>Good</option>
+                        <option value="Excellent">Excellent</option>
+                    </select>
+                </div>
+
+                <div class="admin-actions">
+                    <button class="btn btn--primary" id="sendResultsBtn">Send Results to User</button>
+                    <button class="btn btn--outline" id="refreshAdminBtn">Refresh Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Access (Hidden) -->
+    <div class="admin-access" id="adminAccess">
+        <div class="admin-trigger" id="adminTrigger"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
